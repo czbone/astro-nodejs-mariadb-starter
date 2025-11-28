@@ -1,14 +1,15 @@
-# Astro + Prisma Database Demo
+# Astro + Node.js + MariaDB スターターキット
 
-Astro、Prisma、TailwindCSSを使用したデータベースアクセスのサンプルアプリケーション。
+Astro 5 (SSR)、Prisma 7、MariaDB、React、Tailwind CSS 4を組み合わせた、モダンなフルスタックWebアプリケーションのスターターテンプレート。Node.jsスタンドアロンサーバーとして動作し、本番環境へすぐにデプロイ可能です。
 
 ## 技術スタック
 
-- [Astro](https://astro.build/) - コンテンツ駆動型Webサイトのためのフレームワーク
-- [Prisma](https://www.prisma.io/) - モダンなデータベースORM
-- [TailwindCSS v4](https://tailwindcss.com/) - ユーティリティファーストCSSフレームワーク
+- [Astro](https://astro.build/) - コンテンツ駆動型Webサイトのためのフレームワーク（SSRモード、Node.jsアダプター）
+- [Prisma 7](https://www.prisma.io/) - モダンなデータベースORM（`prisma.config.ts`による設定管理）
+- [MariaDB](https://mariadb.org/) - リレーショナルデータベース（`@prisma/adapter-mariadb`使用）
+- [React 19](https://react.dev/) - インタラクティブコンポーネント（Islands Architecture）
+- [TailwindCSS v4](https://tailwindcss.com/) - ユーティリティファーストCSSフレームワーク（Viteプラグイン経由）
 - [TypeScript](https://www.typescriptlang.org/) - 型安全性
-- [MySQL](https://www.mysql.com/) - リレーショナルデータベース
 
 ## 機能
 
@@ -20,9 +21,9 @@ Astro、Prisma、TailwindCSSを使用したデータベースアクセスのサ�
 
 ## 必要要件
 
-- Node.js v18.14.1以上
-- pnpm v10.4.1以上
-- MySQLサーバー（または他のデータベース）
+- Node.js v20以上
+- pnpm v10以上
+- MariaDBサーバー
 
 ## セットアップ
 
@@ -46,6 +47,8 @@ pnpm install
 ```env
 DATABASE_URL="mysql://username:password@localhost:3306/database_name"
 ```
+
+**注意**: 接続URLは`mysql://`プロトコルを使用しますが、内部的にはPrismaの`@prisma/adapter-mariadb`を通じてMariaDBに接続されます。
 
 ### 3. データベースの初期化
 
@@ -121,36 +124,122 @@ pnpm db:seed        # 初期データの挿入
 
 ## APIエンドポイント
 
-- `GET /api/users` - ユーザー一覧の取得
-- `POST /api/users` - ユーザーの作成
-- `GET /api/posts` - 投稿一覧の取得
-- `POST /api/posts` - 投稿の作成
+### ユーザーAPI
+- `GET /api/users` - ユーザー一覧の取得（投稿情報を含む）
+- `POST /api/users` - ユーザーの作成（email, nameを指定）
+- `GET /api/users/[id]` - 特定ユーザーの取得（投稿情報を含む）
+- `PATCH /api/users/[id]` - ユーザー情報の更新（email, name）
+- `DELETE /api/users/[id]` - ユーザーの削除
+
+### 投稿API
+- `GET /api/posts` - 投稿一覧の取得（著者情報を含む）
+- `POST /api/posts` - 投稿の作成（title, content, authorIdを指定）
+- `GET /api/posts/[id]` - 特定投稿の取得（著者情報を含む）
+- `PATCH /api/posts/[id]` - 投稿情報の更新（title, content, published, authorId）
+- `DELETE /api/posts/[id]` - 投稿の削除
+
+### エラーレスポンス
+- `400` - バリデーションエラー（必須項目の欠落など）
+- `404` - リソースが見つからない
+- `409` - データの競合（例: メールアドレスの重複）
+- `500` - サーバーエラー
+
+## 本番環境へのデプロイ
+
+### ビルドと起動
+
+```bash
+# プロダクションビルド
+pnpm build
+
+# Node.jsスタンドアロンサーバーとして起動
+pnpm start
+```
+
+本番環境では、Astroが自動的に`NODE_ENV=production`を設定します。ビルド後の成果物は`dist/`ディレクトリに生成され、`pnpm start`コマンドで`node ./dist/server/entry.mjs`が実行されます。
+
+### 環境変数の設定
+
+本番環境用の`.env`ファイルを作成するか、システム環境変数として`DATABASE_URL`を設定してください：
+
+```env
+DATABASE_URL="mysql://username:password@production-host:3306/database_name"
+```
+
+### ポート設定
+
+デフォルトでは`http://localhost:3000`でサーバーが起動します。ポートを変更する場合は、`astro.config.mjs`の`server`セクションで設定を変更してください：
+
+```javascript
+export default defineConfig({
+  server: {
+    port: 4000,  // 任意のポート番号
+    host: true
+  }
+})
+```
+
+### Prisma設定
+
+本番環境でも開発環境と同様に、デプロイ前に以下のコマンドを実行してください：
+
+```bash
+# Prismaクライアントの生成
+pnpm db:generate
+
+# マイグレーションの適用（本番DBに対して）
+pnpm db:migrate
+```
 
 ## プロジェクト構造
 
 ```
 ├── src/
+│   ├── components/
+│   │   ├── Navigation.astro   # ナビゲーションバー
+│   │   ├── UserForm.tsx       # ユーザー作成フォーム（React）
+│   │   ├── UserList.tsx       # ユーザー一覧（React）
+│   │   ├── PostForm.tsx       # 投稿作成フォーム（React）
+│   │   └── PostList.tsx       # 投稿一覧（React）
 │   ├── lib/
 │   │   └── prisma.ts          # Prismaクライアントの設定
 │   ├── pages/
 │   │   ├── api/
 │   │   │   ├── users.ts       # ユーザーAPI
-│   │   │   └── posts.ts       # 投稿API
-│   │   └── index.astro        # メインページ（データベースデモ）
-│   ├── scripts/
-│   │   └── index.js           # フローバイトスクリプト
+│   │   │   ├── posts.ts       # 投稿API
+│   │   │   ├── users/
+│   │   │   │   └── [id].ts    # 個別ユーザーAPI
+│   │   │   └── posts/
+│   │   │       └── [id].ts    # 個別投稿API
+│   │   ├── index.astro        # ダッシュボード
+│   │   ├── users.astro        # ユーザー管理ページ
+│   │   └── posts.astro        # 投稿管理ページ
 │   ├── layouts/
 │   │   └── Layout.astro       # ページレイアウト
+│   ├── scripts/
+│   │   └── index.js           # Flowbiteスクリプト
 │   └── styles/
-│       └── global.css         # グローバルスタイル
+│       └── global.css         # グローバルスタイル（Tailwind CSS）
 ├── prisma/
 │   ├── schema.prisma          # データベーススキーマ
-│   └── seed.ts                # 初期データ挿入スクリプト
+│   ├── seed.ts                # 初期データ挿入スクリプト
+│   └── migrations/            # マイグレーションファイル
 ├── public/                    # 静的アセット
+├── prisma.config.ts           # Prisma 7設定ファイル
 ├── astro.config.mjs           # Astroの設定
 ├── tsconfig.json              # TypeScriptの設定
 └── package.json               # プロジェクトの依存関係とスクリプト
 ```
+
+### Prisma 7の設定
+
+本プロジェクトではPrisma 7の設定ファイル方式を採用しており、`prisma.config.ts`で以下を管理しています：
+
+- **スキーマパス**: `prisma/schema.prisma`
+- **マイグレーションパス**: `prisma/migrations`
+- **データソースURL**: 環境変数`DATABASE_URL`から取得
+
+`prisma.config.ts`を使用することで、複数環境での設定管理が容易になり、TypeScriptの型安全性を活用できます。
 
 ## 使用方法
 
