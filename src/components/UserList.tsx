@@ -121,13 +121,13 @@ export default function UserList({ initialUsers }: Props) {
                 <div className="flex space-x-2">
                   <button
                     onClick={() => handleEdit(user)}
-                    className="rounded bg-yellow-500 px-3 py-1 text-sm text-white hover:bg-yellow-600"
+                    className="w-20 rounded bg-yellow-500 px-3 py-1 text-sm text-white hover:bg-yellow-600"
                   >
                     編集
                   </button>
                   <button
                     onClick={() => handleDelete(user.id)}
-                    className="rounded bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600"
+                    className="w-20 rounded bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600"
                   >
                     削除
                   </button>

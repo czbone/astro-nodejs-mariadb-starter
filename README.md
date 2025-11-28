@@ -2,6 +2,10 @@
 
 Astro 5 (SSR)、Prisma 7、MariaDB、React、Tailwind CSS 4を組み合わせた、モダンなフルスタックWebアプリケーションのスターターテンプレート。Node.jsスタンドアロンサーバーとして動作し、本番環境へすぐにデプロイ可能です。
 
+## 画面イメージ
+
+![画面イメージ](https://github.com/user-attachments/assets/ccbed749-1666-4144-ac21-1197cae7d797)
+
 ## 技術スタック
 
 - [Astro](https://astro.build/) - コンテンツ駆動型Webサイトのためのフレームワーク（SSRモード、Node.jsアダプター）

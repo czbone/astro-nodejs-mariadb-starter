@@ -191,7 +191,7 @@ export default function PostList({ initialPosts, users }: Props) {
                 <div className="ml-4 flex flex-col space-y-2">
                   <button
                     onClick={() => handleTogglePublished(post.id, !post.published)}
-                    className={`rounded px-3 py-1 text-sm ${
+                    className={`w-20 rounded px-3 py-1 text-sm ${
                       post.published
                         ? 'bg-gray-500 text-white hover:bg-gray-600'
                         : 'bg-green-500 text-white hover:bg-green-600'
@@ -201,13 +201,13 @@ export default function PostList({ initialPosts, users }: Props) {
                   </button>
                   <button
                     onClick={() => handleEdit(post)}
-                    className="rounded bg-yellow-500 px-3 py-1 text-sm text-white hover:bg-yellow-600"
+                    className="w-20 rounded bg-yellow-500 px-3 py-1 text-sm text-white hover:bg-yellow-600"
                   >
                     編集
                   </button>
                   <button
                     onClick={() => handleDelete(post.id)}
-                    className="rounded bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600"
+                    className="w-20 rounded bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600"
                   >
                     削除
                   </button>
