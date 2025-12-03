@@ -200,7 +200,6 @@ pnpm db:migrate
 ```
 ├── src/
 │   ├── components/
-│   │   ├── Navigation.astro   # ナビゲーションバー
 │   │   ├── UserForm.tsx       # ユーザー作成フォーム（React）
 │   │   ├── UserList.tsx       # ユーザー一覧（React）
 │   │   ├── PostForm.tsx       # 投稿作成フォーム（React）
@@ -219,7 +218,8 @@ pnpm db:migrate
 │   │   ├── users.astro        # ユーザー管理ページ
 │   │   └── posts.astro        # 投稿管理ページ
 │   ├── layouts/
-│   │   └── Layout.astro       # ページレイアウト
+│   │   ├── Layout.astro       # ページレイアウト
+│   │   └── Navigation.astro   # ナビゲーションバー
 │   ├── scripts/
 │   │   └── index.js           # Flowbiteスクリプト
 │   └── styles/

@@ -1,8 +1,8 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import { prisma } from '../lib/prisma'
-import PostForm from '../components/PostForm'
-import PostList from '../components/PostList'
+import Layout from '@/layouts/Layout.astro'
+import { prisma } from '@/lib/prisma'
+import PostForm from '@/components/PostForm'
+import PostList from '@/components/PostList'
 
 const [posts, users] = await Promise.all([
   prisma.post.findMany({

@@ -1,8 +1,8 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import { prisma } from '../lib/prisma'
-import UserForm from '../components/UserForm'
-import UserList from '../components/UserList'
+import Layout from '@/layouts/Layout.astro'
+import { prisma } from '@/lib/prisma'
+import UserForm from '@/components/UserForm'
+import UserList from '@/components/UserList'
 
 const users = await prisma.user.findMany({
   include: {
