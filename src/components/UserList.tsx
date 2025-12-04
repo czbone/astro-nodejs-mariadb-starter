@@ -118,7 +118,7 @@ export default function UserList({ initialUsers }: Props) {
                   <div className="text-gray-600">{user.email}</div>
                   <div className="mt-1 text-sm text-gray-500">投稿数: {user.posts.length}</div>
                 </div>
-                <div className="flex space-x-2">
+                <div className="ml-4 flex flex-col space-y-2">
                   <button
                     onClick={() => handleEdit(user)}
                     className="w-20 rounded bg-yellow-500 px-3 py-1 text-sm text-white hover:bg-yellow-600"
