@@ -66,9 +66,17 @@ export const PATCH: APIRoute = async ({ request, params }) => {
 
 export const DELETE: APIRoute = async ({ params }) => {
   try {
-    await prisma.user.delete({
-      where: { id: parseInt(params.id!) }
-    })
+    const userId = parseInt(params.id!)
+
+    // トランザクションで関連する投稿とユーザーを削除
+    await prisma.$transaction([
+      prisma.post.deleteMany({
+        where: { authorId: userId }
+      }),
+      prisma.user.delete({
+        where: { id: userId }
+      })
+    ])
 
     return new Response(JSON.stringify({ message: 'User deleted successfully' }), {
       status: 200,
